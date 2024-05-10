@@ -95,7 +95,26 @@ public class JobData {
         loadData();
 
         // TODO - implement this method
-        return null;
+        ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+
+        for (HashMap<String, String> job : allJobs) {
+            // Check each column in the job for the search term
+            boolean found = false;
+            for (String column : job.keySet()) {
+                String columnValue = job.get(column);
+                if (columnValue != null && columnValue.toLowerCase().contains(value.toLowerCase())) {
+                    found = true;
+                    break;
+                }
+            }
+            // If the search term is found in any column, add the job to the result list
+            if (found) {
+                jobs.add(job);
+            }
+        }
+
+        return jobs;
+        //return null;
     }
 
     /**
