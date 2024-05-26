@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -70,13 +71,12 @@ public class JobData {
         loadData();
 
         ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+        String lowerCaseValue = value.toLowerCase();
 
-        for (HashMap<String, String> row : allJobs) {
-
-            String aValue = row.get(column);
-
-            if (aValue.contains(value)) {
-                jobs.add(row);
+        for (HashMap<String, String> job : allJobs) {
+            String columnValue = job.get(column);
+            if (columnValue != null && columnValue.toLowerCase().contains(lowerCaseValue)) {
+                jobs.add(job);
             }
         }
 
@@ -95,21 +95,28 @@ public class JobData {
         loadData();
 
         // TODO - implement this method
+
         ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+        HashSet<String> uniqueJobs = new HashSet<>();
+
+        String lowerCaseValue = value.toLowerCase();
 
         for (HashMap<String, String> job : allJobs) {
-            // Check each column in the job for the search term
             boolean found = false;
             for (String column : job.keySet()) {
                 String columnValue = job.get(column);
-                if (columnValue != null && columnValue.toLowerCase().contains(value.toLowerCase())) {
+                if (columnValue != null && columnValue.toLowerCase().contains(lowerCaseValue)) {
                     found = true;
                     break;
                 }
             }
-            // If the search term is found in any column, add the job to the result list
+
             if (found) {
-                jobs.add(job);
+                String jobString = job.toString();
+                if (!uniqueJobs.contains(jobString)) {
+                    uniqueJobs.add(jobString);
+                    jobs.add(job);
+                }
             }
         }
 
